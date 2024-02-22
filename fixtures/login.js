@@ -1,14 +1,12 @@
 import { test as base } from '@playwright/test';
 
+import { LoginPage } from '../pages/LoginPage';
+
 export const test = base.extend({
   page: async ({ page }, use) => {
-    await page.goto('/customer/account/login/');
-    await page.waitForLoadState('load');
-    await page.fill('#loginForm #email', process.env.EMAIL_TEST);
-    await page.fill('#loginForm #pass', process.env.PASSWORD_TEST);
-    await page.click('#loginForm #send2');
-    await page.waitForLoadState('load');
+    const loginPage = new LoginPage(page);
 
+    await loginPage.login();
     await use(page);
   }
 })

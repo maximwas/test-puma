@@ -1,28 +1,34 @@
 import { test, expect } from '@playwright/test';
 
+import { LoginPage } from '../pages/LoginPage'
+
 test.beforeEach(async ({ page }) => {
   await page.goto('/customer/account/login/');
 });
 
 test.describe('Valid login form', () => {
   test('correct form validation', async ({ page }) => {
-    await page.fill('#loginForm #email', process.env.EMAIL_TEST);
-    await page.fill('#loginForm #pass', process.env.PASSWORD_TEST);
+    const loginPage = new LoginPage(page);
 
-    const formIsValid = await page.$$eval('#loginForm .form__row-text .form__row-text-i', (inputs) => {
-      return inputs.every((input) => input.classList.contains('valid'));
-    })
+    await loginPage.fillingLoginForm({
+      email: process.env.EMAIL_TEST,
+      password: process.env.PASSWORD_TEST,
+    });
+
+    const formIsValid = await loginPage.validForm('loginForm');
 
     await expect(formIsValid).toBe(true);
   });
 
   test('incorrect form validation', async ({ page }) => {
-    await page.fill('#loginForm #email', 'segsedrgwerg');
-    await page.fill('#loginForm #pass', '');
+    const loginPage = new LoginPage(page);
 
-    const formIsInvalid = await page.$$eval('#registerForm .form__row-text .form__row-text-i', (inputs) => {
-      return inputs.every((input) => input.classList.contains('invalid'));
-    })
+    await loginPage.fillingLoginForm({
+      email: 'segsedrgwerg',
+      password: '',
+    });
+
+    const formIsInvalid = await loginPage.invalidForm('loginForm');
 
     await expect(formIsInvalid).toBe(true);
   });
@@ -30,33 +36,33 @@ test.describe('Valid login form', () => {
 
 test.describe('Valid register form', () => {
   test('сorrect form validation', async ({ page }) => {
-    await page.click('.authorization-title.register-title');
+    const loginPage = new LoginPage(page);
 
-    await page.fill('#registerForm input[name=firstname]', 'Тест');
-    await page.fill('#registerForm input[name=lastname]', 'Тест');
-    await page.fill('#registerForm input[name=email]', process.env.EMAIL_TEST);
-    await page.fill('#registerForm input[name=password]', process.env.PASSWORD_TEST);
-    await page.fill('#registerForm input[name=password_confirmation]', process.env.PASSWORD_TEST);
+    await loginPage.fillingRegisterForm({
+      email: process.env.EMAIL_TEST,
+      password: process.env.PASSWORD_TEST,
+      passwordConfirmation: process.env.PASSWORD_TEST,
+      firstName: 'Тест',
+      lastName: 'Тест',
+    });
 
-    const formIsValid = await page.$$eval('#registerForm .form__row-text .form__row-text-i', (inputs) => {
-      return inputs.every((input) => input.classList.contains('valid'));
-    })
+    const formIsValid = await loginPage.validForm('registerForm');
 
     await expect(formIsValid).toBe(true);
   });
 
   test('incorrect form validation', async ({ page }) => {
-    await page.click('.authorization-title.register-title');
+    const loginPage = new LoginPage(page);
 
-    await page.fill('#registerForm input[name=firstname]', 'Test');
-    await page.fill('#registerForm input[name=lastname]', 'Test');
-    await page.fill('#registerForm input[name=email]', 'asd123asd123');
-    await page.fill('#registerForm input[name=password]', 'asd123asd123');
-    await page.fill('#registerForm input[name=password_confirmation]', 'asd12334asd12334');
+    await loginPage.fillingRegisterForm({
+      email: 'asd123asd123',
+      password: 'asd123asd123',
+      passwordConfirmation: 'asd12334asd12334',
+      firstName: 'Test',
+      lastName: 'Test',
+    });
 
-    const formIsInvalid = await page.$$eval('#registerForm .form__row-text .form__row-text-i', (inputs) => {
-      return inputs.every((input) => input.classList.contains('invalid'));
-    })
+    const formIsInvalid = await loginPage.invalidForm('registerForm');
 
     await expect(formIsInvalid).toBe(true);
   });
