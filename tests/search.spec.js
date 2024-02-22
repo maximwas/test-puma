@@ -1,10 +1,4 @@
-import { test, expect } from '@playwright/test';
-
-import { login } from '../utils/login'
-
-test.beforeEach(async ({ page }) => {
-  await login(page);
-});
+import { test, expect } from '../fixtures/login';
 
 test.describe('Search', () => {
   test('search the site by keyword "Кросівки"', async ({ page }) => {

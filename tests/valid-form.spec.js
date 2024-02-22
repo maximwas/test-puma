@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('https://ua.puma.com/uk/customer/account/login/');
+  await page.goto('/customer/account/login/');
 });
 
 test.describe('Valid login form', () => {

@@ -1,10 +1,4 @@
-import { test, expect } from '@playwright/test';
-
-import { login } from '../utils/login'
-
-test.beforeEach(async ({ page }) => {
-  await login(page);
-});
+import { test, expect } from '../fixtures/login';
 
 test.describe('Login', () => {
   test('login to the puma account', async ({ page }) => {
