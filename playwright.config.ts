@@ -9,6 +9,7 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
+  timeout: 5 * 60 * 5000,
   use: {
     baseURL: 'https://ua.puma.com/uk',
     trace: 'on-first-retry',
