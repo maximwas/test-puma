@@ -7,7 +7,16 @@ export class CartPage {
 
   async addItemInCart(index) {
     const products = await this.page.$$('#catalog .grid .grid__item');
-    const productItem = await products[index].$('.product-item__img-w');
+
+    if (!products.length) {
+      return;
+    }
+
+    const productItem = await products[index]?.$('.product-item__img-w');
+
+    if (!productItem) {
+      return;
+    }
 
     await productItem.click();
     await this.page.waitForLoadState('load');
